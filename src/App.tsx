@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "./utils/fetchApi";
-import { WeatherHeaderType, WeatherType } from "./types/weather";
+import {WeatherType } from "./types/weather";
 import AddNewWeatherItem from "./components/Weather/AddNewWeatherItem";
 import WeatherItem from "./components/Weather/WeatherItem";
 import { getFromLocalStorage, saveToLocalStorage } from "./utils/storage";
 import { useAppContext } from "./context/AppContext";
+import Button from "./components/Button/Button";
 
 function App() {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ addNewWeatherCardError, setAddNewWeatherCardError ] = useState('');
-  const [ weatherCards, setWeatherCards ] = useState<WeatherHeaderType[] | null>(null);
-  const { onSetIsFahrenheit } = useAppContext();
+  const [ weatherCards, setWeatherCards ] = useState<WeatherType[] | null>(null);
+  const { onSetIsFahrenheit, isFahrenheit } = useAppContext();
 
   useEffect(() => {
     (async() => {
       // Check if there are saved data in localstorage
-      const savedCards = await getFromLocalStorage<WeatherHeaderType[]>('weather');
+      const savedCards = await getFromLocalStorage<WeatherType[]>('weather');
       if (!savedCards) {
         // if not, we load default cards
-        const response = await fetchApi<WeatherHeaderType[]>('./cards.json');
+        const response = await fetchApi<WeatherType[]>('./cards.json');
         console.log(response)
         if (response) {
           setWeatherCards(response)
@@ -41,9 +42,8 @@ function App() {
       if(existInList) {
         setAddNewWeatherCardError('Location already exist');
       } else {
-        const { temp, ...rest } = card;
         const newWeatherCards = [
-          rest as WeatherHeaderType,
+          card,
           ...weatherCards,
         ]
         saveToLocalStorage('weather', newWeatherCards);
@@ -61,15 +61,15 @@ function App() {
       saveToLocalStorage('weather', filteredWeatherCards);
     }
   }
-  
+
   return (
     <div className="mx-auto flex flex-col" style={{ maxWidth: 600 }}>
       {isLoading && <div className="my-4 text-center">Loading...</div>}
       { !isLoading && (
         <div>
-          <div>
-            <input type="checkbox" onClick={onSetIsFahrenheit} />
-          </div>
+          <Button onClick={onSetIsFahrenheit}>
+            Show { isFahrenheit ? "Celsius" : "Fahrenheit" }
+          </Button>
           <AddNewWeatherItem onClick={onAddNewCard} error={addNewWeatherCardError} />
           { weatherCards && weatherCards.map((card) => <WeatherItem key={card.location} {...{...card, onRemove}} />)}
         </div>

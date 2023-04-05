@@ -1,13 +1,24 @@
-export type WeatherCardType = {
+type Temp = {
+  low: number;
+  high: number;
+}
+
+export type Hrltemp = {
+  time: string;
+  temp: number;
+}
+
+export type WeatherDefaultType = {
   location: string;
   lat: number;
   lng: number;
-  temp: number;
+  temp?: Temp;
+  hrlTemp: Hrltemp[],
   onRemove:(city: string) => void;
 }
 
-export type WeatherType = Omit<WeatherCardType, "onRemove">;
+export type WeatherType = Omit<WeatherDefaultType, "onRemove" | "hrlTemp">;
 
-export type WeatherTypeBody = Pick<WeatherCardType, "temp" | "onRemove">;
+export type WeatherCardType = Omit<WeatherDefaultType, "hrlTemp">;
 
-export type WeatherHeaderType = Omit<WeatherCardType, "temp">;
+export type WeatherHeaderType = Omit<WeatherDefaultType, "temp">;

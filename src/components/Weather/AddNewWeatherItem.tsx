@@ -8,14 +8,16 @@ function AddNewWeatherItem({ onClick, error }: { onClick: (data: WeatherType) =>
   const [ location, setLocation ] = useState('');
   const [ longitude, setLongitude ] = useState('');
   const [ lattitude, setLattitude ] = useState('');
-  const [ temp, setTemp ] = useState('');
 
   const onLocalClick = () => {
     onClick({
       location,
       lat: Number(lattitude),
       lng: Number(longitude),
-      temp: Number(temp),
+      temp: {
+        low: 0,
+        high: 0,
+      }
     });
   }
   return (
@@ -26,7 +28,6 @@ function AddNewWeatherItem({ onClick, error }: { onClick: (data: WeatherType) =>
           <TextInput className="mb-2" placeholder="City" onChange={setLocation}/>
           <TextInput className="mb-2" placeholder="Latitude" onChange={setLattitude}/>
           <TextInput className="mb-2" placeholder="Longitude" onChange={setLongitude}/>
-          <TextInput className="mb-2" placeholder="temperature" onChange={setTemp}/>
           <Button onClick={onLocalClick}>Add</Button>
           { error && <p className="text-red-500 w-full py-2 text-center font-bold">{ error }</p>}
         </div>
