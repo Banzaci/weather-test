@@ -1,19 +1,23 @@
-type Temp = {
-  low: number;
-  high: number;
+export type TemperatureForecastType = {
+  degrees: number;
+  time: number;
 }
 
-export type Hrltemp = {
-  time: string;
-  temp: number;
+export type WeatherStatusType = "sun" | "rain" | "cloud";
+
+export type WeatherForecastType = {
+  temp: {
+    high: number;
+    low: number;
+    hourly: TemperatureForecastType[]
+  };
+  weather: WeatherStatusType;
 }
 
 export type WeatherDefaultType = {
   location: string;
   lat: number;
   lng: number;
-  temp?: Temp;
-  hrlTemp: Hrltemp[],
   onRemove:(city: string) => void;
 }
 

@@ -1,22 +1,29 @@
-[
-  {
-    "time": "10am",
-    "temp": 80
+{
+  "temp": {
+    "low": 60,
+    "high": 80,
+    "hourly": [
+      {
+        "time": "10am",
+        "degrees": 80
+      },
+      {
+        "time": "11am",
+        "degrees": 80
+      },
+      {
+        "time": "12am",
+        "degrees": 80
+      },
+      {
+        "time": "1pm",
+        "degrees": 80
+      },
+      {
+        "time": "2pm",
+        "degrees": 80
+      }
+    ]
   },
-  {
-    "time": "11am",
-    "temp": 90
-  },
-  {
-    "time": "12am",
-    "temp": 110
-  },
-  {
-    "time": "1pm",
-    "temp": 90
-  },
-  {
-    "time": "2pm",
-    "temp": 80
-  }
-]
+  "weather": "sun"
+}

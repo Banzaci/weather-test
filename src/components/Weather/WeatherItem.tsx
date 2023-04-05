@@ -1,38 +1,50 @@
 import { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSun, faTrash, faTemperature1 } from '@fortawesome/free-solid-svg-icons'
-import { Hrltemp, WeatherCardType } from "../../types/weather";
+import { faSun, faTrash, faCloud, faCloudRain } from '@fortawesome/free-solid-svg-icons'
+import { TemperatureForecastType, WeatherCardType, WeatherForecastType, WeatherStatusType } from "../../types/weather";
 import Button from "../Button/Button";
 import { useAppContext } from "../../context/AppContext";
 import { fetchApi } from "../../utils/fetchApi";
 
 export const calculateFromFarToCel = (n:number) => Math.trunc((n - 32) * (5 / 9));
 
-function WeatherItem({  lat, lng, location, onRemove, temp }: WeatherCardType) {
+//Render a weather icon depending on weather
+const renderWeatherType = (type: WeatherStatusType) => {
+  if(type === "cloud") return faCloud;
+  if(type === "rain") return faCloudRain;
+  return faSun; // set the Sun as default
+}
+
+function WeatherItem({  lat, lng, location, onRemove }: WeatherCardType) {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ weatherData, setWeatherData ] = useState<Hrltemp[] | null>()
+  const [ weatherData, setWeatherData ] = useState<WeatherForecastType | null>()
   const { isFahrenheit } = useAppContext();
   
   useEffect(() => {
     (async() => {
-      if(isOpen && !weatherData) {
-        const response = await fetchApi<Hrltemp[]>('./cardData.json');
+      if(!weatherData) {
+        const response = await fetchApi<WeatherForecastType>('./cardData.json');
         if (response) {
-          setWeatherData(response)
+          setWeatherData(response);
         }
       }
     })();
-  }, [isOpen, weatherData]);
+  }, [weatherData]);
   
-  const renderHrlWeather = useMemo(() => weatherData?.map(({ time, temp }: Hrltemp) => 
-    <div key={time} className="flex my-2">
+  const renderHrlWeather = useMemo(() => weatherData?.temp?.hourly.map(({ degrees, time}: TemperatureForecastType) => {
+    return (<div key={time} className="flex my-2 p-2">
       <div className="w-12 text-sm">{ time }</div>
       <div className="w-12 text-sm">
-          <FontAwesomeIcon icon={faTemperature1} className="mr-1" />
-          { (isFahrenheit ? temp : calculateFromFarToCel(temp)) }
+          { (isFahrenheit ? degrees : calculateFromFarToCel(degrees)) }
         </div>
-    </div>),
-  [weatherData, isFahrenheit])
+    </div>)
+  }),
+  [weatherData, isFahrenheit]);
+
+  if (!weatherData) return null;
+
+  const { weather, temp } = weatherData;
+  const icon = renderWeatherType(weather);
 
   return (
     <div className="flex flex-col my-2 px-2 p-2 rounded bg-slate-100 w-full hover:bg-slate-200" key={location}>
@@ -41,8 +53,12 @@ function WeatherItem({  lat, lng, location, onRemove, temp }: WeatherCardType) 
         <span className="text-sm mr-2">Latitude: {lat}</span>
         <span className="text-sm">Longitude: {lng}</span>
         <div>
-          <FontAwesomeIcon icon={faSun} className="mr-2" /> 
-          { temp && (isFahrenheit ? temp.high : calculateFromFarToCel(temp.high)) }
+          <FontAwesomeIcon icon={icon} className="mr-1" />
+          { temp && <>
+              <span className="mr-2">{(isFahrenheit ? temp.low : calculateFromFarToCel(temp.low)) }</span>
+              <span>{(isFahrenheit ? temp.high : calculateFromFarToCel(temp.high)) }</span>
+            </>
+            }
         </div>
       </div>
       { isOpen && (<div>

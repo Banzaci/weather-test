@@ -2,28 +2,16 @@
   {
     "location": "London",
     "lat": 100,
-    "lng": 100,
-    "temp": {
-      "low": 80,
-      "high": 120
-    }
+    "lng": 200
   },
   {
     "location": "New York",
-    "lat": 100,
-    "lng": 100,
-    "temp": {
-      "low": 80,
-      "high": 120
-    }
+    "lat": 50,
+    "lng": 100
   },
   {
     "location": "Tokyo",
-    "lat": 100,
-    "lng": 100,
-    "temp": {
-      "low": 80,
-      "high": 120
-    }
+    "lat": 1500,
+    "lng": 1000
   }
 ]

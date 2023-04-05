@@ -20,7 +20,6 @@ function App() {
       if (!savedCards) {
         // if not, we load default cards
         const response = await fetchApi<WeatherType[]>('./cards.json');
-        console.log(response)
         if (response) {
           setWeatherCards(response)
         }
@@ -46,6 +45,7 @@ function App() {
           card,
           ...weatherCards,
         ]
+        // Save to localstorage
         saveToLocalStorage('weather', newWeatherCards);
         setWeatherCards(newWeatherCards);
         setAddNewWeatherCardError('');
@@ -58,6 +58,7 @@ function App() {
     const filteredWeatherCards = weatherCards?.filter(({ location}) => city !== location);
     if(filteredWeatherCards) {
       setWeatherCards(filteredWeatherCards)
+      // Save to localstorage
       saveToLocalStorage('weather', filteredWeatherCards);
     }
   }
@@ -66,7 +67,7 @@ function App() {
     <div className="mx-auto flex flex-col" style={{ maxWidth: 600 }}>
       {isLoading && <div className="my-4 text-center">Loading...</div>}
       { !isLoading && (
-        <div>
+        <div className="mt-4">
           <Button onClick={onSetIsFahrenheit}>
             Show { isFahrenheit ? "Celsius" : "Fahrenheit" }
           </Button>
