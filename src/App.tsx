@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "./utils/fetchApi";
-import { WeatherType } from "./types/weather";
+import { WeatherHeaderType, WeatherType } from "./types/weather";
 import AddNewWeatherItem from "./components/Weather/AddNewWeatherItem";
 import WeatherItem from "./components/Weather/WeatherItem";
 import { getFromLocalStorage, saveToLocalStorage } from "./utils/storage";
+import { useAppContext } from "./context/AppContext";
 
 function App() {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ addNewWeatherCardError, setAddNewWeatherCardError ] = useState('');
-  const [ weatherCards, setWeatherCards ] = useState<WeatherType[] | null>(null);
+  const [ weatherCards, setWeatherCards ] = useState<WeatherHeaderType[] | null>(null);
+  const { onSetIsFahrenheit } = useAppContext();
+
   useEffect(() => {
     (async() => {
       // Check if there are saved data in localstorage
-      const savedCards = await getFromLocalStorage<WeatherType[]>('weather');
+      const savedCards = await getFromLocalStorage<WeatherHeaderType[]>('weather');
       if (!savedCards) {
         // if not, we load default cards
-        const response = await fetchApi<WeatherType[]>('./cards.json');
+        const response = await fetchApi<WeatherHeaderType[]>('./cards.json');
         console.log(response)
         if (response) {
           setWeatherCards(response)
@@ -38,8 +41,9 @@ function App() {
       if(existInList) {
         setAddNewWeatherCardError('Location already exist');
       } else {
+        const { temp, ...rest } = card;
         const newWeatherCards = [
-          card,
+          rest as WeatherHeaderType,
           ...weatherCards,
         ]
         saveToLocalStorage('weather', newWeatherCards);
@@ -63,8 +67,11 @@ function App() {
       {isLoading && <div className="my-4 text-center">Loading...</div>}
       { !isLoading && (
         <div>
+          <div>
+            <input type="checkbox" onClick={onSetIsFahrenheit} />
+          </div>
           <AddNewWeatherItem onClick={onAddNewCard} error={addNewWeatherCardError} />
-          { weatherCards && weatherCards.map(( d, index ) => <WeatherItem onRemove={onRemove} key={`${d.lat}${index}`} {...d} />)}
+          { weatherCards && weatherCards.map((card) => <WeatherItem key={card.location} {...{...card, onRemove}} />)}
         </div>
       )}
       
