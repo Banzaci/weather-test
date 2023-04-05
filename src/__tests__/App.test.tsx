@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import App from '../App';
 import * as mockedFetchApi from '../utils/fetchApi';
 
-const locations = [ { location: 'London'} ];
+const locations = [ { location: 'London' } ];
 
 jest.mock('../utils/fetchApi');
 

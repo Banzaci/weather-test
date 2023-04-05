@@ -9,19 +9,19 @@
       },
       {
         "time": "11am",
-        "degrees": 80
+        "degrees": 90
       },
       {
         "time": "12am",
-        "degrees": 80
+        "degrees": 75
       },
       {
         "time": "1pm",
-        "degrees": 80
+        "degrees": 70
       },
       {
         "time": "2pm",
-        "degrees": 80
+        "degrees": 65
       }
     ]
   },

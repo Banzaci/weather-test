@@ -22,10 +22,18 @@ function WeatherItem({  lat, lng, location, onRemove }: WeatherCardType) {
   
   useEffect(() => {
     (async() => {
+      // Check if the data has been cached
       if(!weatherData) {
-        const response = await fetchApi<WeatherForecastType>('./cardData.json');
-        if (response) {
-          setWeatherData(response);
+        try {
+          // This would be a unique request for eact location
+          const response = await fetchApi<WeatherForecastType>('./cardData.json');
+          if (response) {
+            setWeatherData(response);
+          } else {
+            // Promp the user with an error message
+          }
+        } catch (error) {
+          // Promp the user with an error message
         }
       }
     })();
@@ -35,7 +43,7 @@ function WeatherItem({  lat, lng, location, onRemove }: WeatherCardType) {
     return (<div key={time} className="flex my-2 p-2">
       <div className="w-12 text-sm">{ time }</div>
       <div className="w-12 text-sm">
-          { (isFahrenheit ? degrees : calculateFromFarToCel(degrees)) }
+          { (isFahrenheit ? `${degrees}` : `${calculateFromFarToCel(degrees)}`) }&deg;
         </div>
     </div>)
   }),
@@ -53,7 +61,7 @@ function WeatherItem({  lat, lng, location, onRemove }: WeatherCardType) {
         <span className="text-sm mr-2">Latitude: {lat}</span>
         <span className="text-sm">Longitude: {lng}</span>
         <div>
-          <FontAwesomeIcon icon={icon} className="mr-1" />
+          <FontAwesomeIcon icon={icon} className="mr-2" />
           { temp && <>
               <span className="mr-2">{(isFahrenheit ? temp.low : calculateFromFarToCel(temp.low)) }</span>
               <span>{(isFahrenheit ? temp.high : calculateFromFarToCel(temp.high)) }</span>
