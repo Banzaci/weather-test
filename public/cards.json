@@ -1,0 +1,17 @@
+[
+  {
+    "location": "London",
+    "lat": 100,
+    "lng": 100
+  },
+  {
+    "location": "New York",
+    "lat": 100,
+    "lng": 100
+  },
+  {
+    "location": "Tokyo",
+    "lat": 100,
+    "lng": 100
+  }
+]
