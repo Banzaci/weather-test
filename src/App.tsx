@@ -58,7 +58,7 @@ function App() {
     const filteredWeatherCards = weatherCards?.filter(({ location}) => city !== location);
     if(filteredWeatherCards) {
       setWeatherCards(filteredWeatherCards)
-      // Save to localstorage
+      // Save to localstorage.
       saveToLocalStorage('weather', filteredWeatherCards);
     }
   }

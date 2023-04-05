@@ -1,5 +1,9 @@
 # Getting Started with Weather app
 
+Run npm install, then yarn start or npm run start.
+
+"npm run test" to run the tests.
+
 Tech stack is:
 
 - React, Tailwind
